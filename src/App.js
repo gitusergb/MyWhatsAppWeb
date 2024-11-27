@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { lazy, Suspense } from 'react';
+//import Messenger from './components/Messenger';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import AccountProvider from './context/AccountProvider';
+import UserProvider from './context/UserProvider';
+import Loader from './components/loader/Loader';
+
+const Messenger = lazy(() => import('./components/Messenger'));
 
 function App() {
+  const clientId = '501889431581-5sd0mop2q39cgnlv438nuu4uh5gvhdp3.apps.googleusercontent.com';
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <GoogleOAuthProvider  clientId={clientId}>
+          <UserProvider>
+       <AccountProvider>
+       <Suspense fallback={<Loader />} />
+        {/* children */}
+       <Messenger />
+       </AccountProvider>
+       </UserProvider>
+    </GoogleOAuthProvider>
   );
 }
 
